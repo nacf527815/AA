@@ -82,7 +82,30 @@ export default async function ProductDetailPage({
             {product.description}
           </p>
 
-          <div className="mt-8">
+          {/* 배송·혜택 정보 */}
+          <dl className="mt-6 space-y-2 rounded-xl bg-gray-50 p-4 text-sm">
+            <div className="flex gap-3">
+              <dt className="w-16 shrink-0 text-gray-400">배송</dt>
+              <dd className="text-gray-700">
+                택배배송 · 주문 후 평일 기준 2~3일 소요
+                {product.price >= 30000 ? (
+                  <span className="ml-1 font-semibold text-green-700">(무료배송)</span>
+                ) : (
+                  <span className="ml-1 text-gray-400">(3만원 이상 무료배송)</span>
+                )}
+              </dd>
+            </div>
+            <div className="flex gap-3">
+              <dt className="w-16 shrink-0 text-gray-400">신선도</dt>
+              <dd className="text-gray-700">산지직송 · 군산원예농협 품질보증</dd>
+            </div>
+            <div className="flex gap-3">
+              <dt className="w-16 shrink-0 text-gray-400">교환·반품</dt>
+              <dd className="text-gray-700">수령 후 7일 이내 (신선식품 단순변심 제외)</dd>
+            </div>
+          </dl>
+
+          <div className="mt-6">
             <AddToCartButton productId={product.id} soldOut={soldOut} />
           </div>
         </div>

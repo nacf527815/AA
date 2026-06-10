@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { formatPrice, discountRate } from "@/lib/utils";
 
+export const FREE_SHIPPING_THRESHOLD = 30000;
+
 export type ProductCardData = {
   id: string;
   name: string;
@@ -15,9 +17,17 @@ function categoryEmoji(category: string): string {
   return category === "가공식품" ? "🍶" : "🥬";
 }
 
-export default function ProductCard({ product }: { product: ProductCardData }) {
+export default function ProductCard({
+  product,
+  rank,
+}: {
+  product: ProductCardData;
+  rank?: number;
+}) {
   const soldOut = product.stock <= 0;
   const rate = discountRate(product.price, product.listPrice);
+  const freeShipping = product.price >= FREE_SHIPPING_THRESHOLD;
+  const lowStock = !soldOut && product.stock <= 5;
 
   return (
     <Link
@@ -37,20 +47,42 @@ export default function ProductCard({ product }: { product: ProductCardData }) {
             {categoryEmoji(product.category)}
           </div>
         )}
-        {rate > 0 && !soldOut && (
+
+        {/* 랭킹 번호 */}
+        {rank !== undefined && (
+          <span className="absolute left-2 top-2 grid h-7 w-7 place-items-center rounded-lg bg-gray-900/80 text-sm font-bold text-white">
+            {rank}
+          </span>
+        )}
+
+        {/* 할인 배지 (랭킹이 없을 때 좌상단) */}
+        {rate > 0 && !soldOut && rank === undefined && (
           <span className="absolute left-2 top-2 rounded-md bg-red-500 px-2 py-1 text-xs font-bold text-white">
             {rate}% 할인
           </span>
         )}
+
         {soldOut && (
-          <span className="absolute left-2 top-2 rounded-md bg-gray-800/80 px-2 py-1 text-xs font-semibold text-white">
+          <span className="absolute inset-0 grid place-items-center bg-white/60 text-sm font-bold text-gray-700">
             품절
+          </span>
+        )}
+        {lowStock && (
+          <span className="absolute bottom-2 left-2 rounded-md bg-orange-500 px-2 py-1 text-[11px] font-bold text-white">
+            품절임박 {product.stock}개
           </span>
         )}
       </div>
 
       <div className="flex flex-1 flex-col gap-1 p-4">
-        <span className="text-xs font-medium text-green-700">{product.category}</span>
+        <div className="flex items-center gap-1">
+          <span className="text-xs font-medium text-green-700">{product.category}</span>
+          {freeShipping && (
+            <span className="rounded bg-green-100 px-1.5 py-0.5 text-[10px] font-semibold text-green-700">
+              무료배송
+            </span>
+          )}
+        </div>
         <h3 className="line-clamp-2 text-sm font-semibold text-gray-900 sm:text-base">
           {product.name}
         </h3>

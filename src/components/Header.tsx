@@ -25,6 +25,13 @@ export default async function Header() {
 
   return (
     <header className="sticky top-0 z-30 bg-white">
+      {/* 혜택 띠배너 */}
+      <div className="bg-green-800 text-center text-xs font-medium text-white">
+        <div className="mx-auto max-w-6xl px-4 py-1.5">
+          🚚 3만원 이상 무료배송 · 🎟️ 신규회원 5% 할인쿠폰 · 🥬 산지직송 신선보장
+        </div>
+      </div>
+
       {/* 상단 유틸바 */}
       <div className="border-b border-gray-100 bg-gray-50 text-xs text-gray-500">
         <div className="mx-auto flex h-9 max-w-6xl items-center justify-between px-4">
