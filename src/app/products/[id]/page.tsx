@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { formatPrice, discountRate } from "@/lib/utils";
+import { formatPrice, discountRate, categoryEmoji } from "@/lib/utils";
 import AddToCartButton from "@/components/AddToCartButton";
 
 export default async function ProductDetailPage({
@@ -42,7 +42,7 @@ export default async function ProductDetailPage({
             />
           ) : (
             <div className="grid h-full w-full place-items-center text-8xl">
-              {product.category === "가공식품" ? "🍶" : "🥬"}
+              {categoryEmoji(product.category)}
             </div>
           )}
         </div>

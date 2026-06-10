@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { formatPrice, discountRate } from "@/lib/utils";
+import { formatPrice, discountRate, categoryEmoji } from "@/lib/utils";
 
 export const FREE_SHIPPING_THRESHOLD = 30000;
 
@@ -12,10 +12,6 @@ export type ProductCardData = {
   imageUrl: string | null;
   stock: number;
 };
-
-function categoryEmoji(category: string): string {
-  return category === "가공식품" ? "🍶" : "🥬";
-}
 
 export default function ProductCard({
   product,

@@ -5,7 +5,10 @@ import SignOutButton from "@/components/SignOutButton";
 
 const GNB = [
   { label: "전체상품", href: "/products" },
-  { label: "농산물", href: "/products?category=농산물" },
+  { label: "과일", href: "/products?category=과일" },
+  { label: "채소", href: "/products?category=채소" },
+  { label: "정육·계란", href: "/products?category=정육·계란" },
+  { label: "수산물", href: "/products?category=수산물" },
   { label: "가공식품", href: "/products?category=가공식품" },
   { label: "이번주 특가", href: "/products?sale=1" },
 ];

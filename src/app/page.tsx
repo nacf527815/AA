@@ -2,20 +2,24 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
 import PromoBanner from "@/components/PromoBanner";
+import { CATEGORIES, categoryEmoji, CATEGORY_BG } from "@/lib/utils";
 
+// 홈 카테고리 아이콘 (전체 카테고리 + 특가 바로가기)
 const CATEGORY_ICONS = [
-  { label: "농산물", emoji: "🥬", href: "/products?category=농산물", bg: "bg-green-100" },
-  { label: "가공식품", emoji: "🍶", href: "/products?category=가공식품", bg: "bg-amber-100" },
+  ...CATEGORIES.map((c, i) => ({
+    label: c,
+    emoji: categoryEmoji(c),
+    href: `/products?category=${encodeURIComponent(c)}`,
+    bg: CATEGORY_BG[i % CATEGORY_BG.length],
+  })),
   { label: "이번주 특가", emoji: "🏷️", href: "/products?sale=1", bg: "bg-red-100" },
-  { label: "쌀·잡곡", emoji: "🌾", href: "/products?q=쌀", bg: "bg-yellow-100" },
-  { label: "김치·반찬", emoji: "🥬", href: "/products?q=김치", bg: "bg-orange-100" },
-  { label: "전체상품", emoji: "🛒", href: "/products", bg: "bg-emerald-100" },
+  { label: "전체상품", emoji: "🛒", href: "/products", bg: "bg-gray-100" },
 ];
 
 const EXHIBITIONS = [
-  { title: "제철 과일 기획전", sub: "지금 가장 맛있는 과일", emoji: "🍎", href: "/products?q=사과", from: "from-red-500", to: "to-rose-400" },
-  { title: "우리쌀 직거래", sub: "산지직송 햅쌀", emoji: "🌾", href: "/products?q=쌀", from: "from-amber-500", to: "to-yellow-400" },
-  { title: "건강 가공식품", sub: "매실청·들기름·꿀", emoji: "🍯", href: "/products?category=가공식품", from: "from-orange-500", to: "to-amber-400" },
+  { title: "제철 과일 기획전", sub: "지금 가장 맛있는 과일", emoji: "🍎", href: "/products?category=과일", from: "from-red-500", to: "to-rose-400" },
+  { title: "정육·신선식품", sub: "냉장 산지직송", emoji: "🥩", href: "/products?category=정육·계란", from: "from-rose-500", to: "to-pink-400" },
+  { title: "건강식품 모음전", sub: "매실청·홍삼·꿀", emoji: "🌿", href: "/products?category=건강식품", from: "from-emerald-600", to: "to-teal-400" },
   { title: "알뜰 특가전", sub: "최대 20% 할인", emoji: "🏷️", href: "/products?sale=1", from: "from-green-600", to: "to-emerald-400" },
 ];
 

@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { updateCartItem, removeCartItem } from "@/actions/cart-actions";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, categoryEmoji } from "@/lib/utils";
 
 export default function CartItemRow({
   id,
@@ -35,7 +35,7 @@ export default function CartItemRow({
       className={`flex items-center gap-4 py-4 ${pending ? "opacity-50" : ""}`}
     >
       <div className="grid h-16 w-16 shrink-0 place-items-center rounded-lg bg-green-50 text-3xl">
-        {category === "가공식품" ? "🍶" : "🥬"}
+        {categoryEmoji(category)}
       </div>
 
       <div className="min-w-0 flex-1">
