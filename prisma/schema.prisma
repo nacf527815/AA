@@ -1,0 +1,117 @@
+// 군산원예농협 쇼핑몰 데이터 모델
+// 참고: SQLite는 enum을 지원하지 않아 category/role/status는 String으로 저장하고 앱에서 제한한다.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id            String     @id @default(cuid())
+  name          String?
+  email         String?    @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String? // 이메일 가입자만 값 있음, 소셜 로그인은 null
+  role          String     @default("user") // "user" | "admin"
+  accounts      Account[]
+  sessions      Session[]
+  cartItems     CartItem[]
+  orders        Order[]
+  createdAt     DateTime   @default(now())
+}
+
+// @auth/prisma-adapter 필수 모델 (카카오/네이버 OAuth 계정 저장)
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String // "kakao" | "naver" | "credentials"
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  name        String
+  category    String // "농산물" | "가공식품"
+  price       Int // 실제 판매가 (원, 정수)
+  listPrice   Int? // 정상가 (할인 전 가격). 있으면 취소선+할인율 표시
+  description String
+  imageUrl    String?
+  stock       Int         @default(0)
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+  createdAt   DateTime    @default(now())
+}
+
+model CartItem {
+  id        String  @id @default(cuid())
+  userId    String
+  productId String
+  quantity  Int     @default(1)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId]) // 사용자별 상품 1행
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  userId        String
+  status        String      @default("결제대기") // "결제대기" | "결제완료"
+  totalAmount   Int
+  receiverName  String
+  receiverPhone String
+  address       String
+  memo          String?
+  // 토스페이먼츠 결제 정보
+  tossOrderId   String      @unique // 토스에 전달하는 고유 주문번호
+  paymentKey    String? // 결제 승인 후 토스가 발급
+  paymentMethod String? // 카드/간편결제/가상계좌/계좌이체/휴대폰 등
+  vbankInfo     String? // 무통장입금(가상계좌) 안내: 은행/계좌번호/입금기한
+  paidAt        DateTime?
+  items         OrderItem[]
+  user          User        @relation(fields: [userId], references: [id])
+  createdAt     DateTime    @default(now())
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  orderId     String
+  productId   String
+  productName String // 주문 당시 상품명 스냅샷
+  price       Int // 주문 당시 단가 스냅샷
+  quantity    Int
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product @relation(fields: [productId], references: [id])
+}
