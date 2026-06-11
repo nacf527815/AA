@@ -1,5 +1,5 @@
 // 군산원예농협 쇼핑몰 데이터 모델
-// 참고: SQLite는 enum을 지원하지 않아 category/role/status는 String으로 저장하고 앱에서 제한한다.
+// DB: Supabase(PostgreSQL). category/role/status는 단순화를 위해 String으로 저장하고 앱에서 값 범위를 제한한다.
 
 generator client {
   provider = "prisma-client"
@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 model User {
