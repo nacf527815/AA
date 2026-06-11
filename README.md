@@ -95,7 +95,7 @@ npm run build      # 배포용 빌드 점검
 ## 기술 정보 (참고)
 
 - **Next.js** (App Router, TypeScript) + **Tailwind CSS**
-- **Prisma 7 + SQLite** (`dev.db` 파일에 데이터 저장)
+- **Prisma 7 + Supabase (PostgreSQL)** — 데이터는 Supabase 클라우드 DB에 저장
 - **Auth.js (NextAuth v5)** — 이메일/카카오/네이버 로그인
 - **토스페이먼츠 SDK** — 결제
-- 데이터는 모두 이 폴더의 `dev.db` 파일에 저장됩니다. 나중에 실제 서버(PostgreSQL 등)로 옮길 수 있습니다.
+- DB 연결 주소는 `.env` 의 `DATABASE_URL` / `DIRECT_URL` 에 설정합니다 (`.env.example` 참고).

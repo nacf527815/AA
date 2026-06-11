@@ -9,6 +9,8 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    // 마이그레이션은 직접 연결(DIRECT_URL, 5432 포트)을 사용해야 안정적이다.
+    // 없으면 DATABASE_URL 로 대체.
+    url: process.env["DIRECT_URL"] ?? process.env["DATABASE_URL"],
   },
 });

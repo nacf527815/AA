@@ -1,10 +1,11 @@
 import "dotenv/config";
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "../src/generated/prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-const adapter = new PrismaBetterSqlite3({
-  url: process.env.DATABASE_URL ?? "file:./dev.db",
+// 시드는 마이그레이션과 동일하게 직접 연결(DIRECT_URL)을 우선 사용한다.
+const adapter = new PrismaPg({
+  connectionString: process.env.DIRECT_URL ?? process.env.DATABASE_URL,
 });
 const prisma = new PrismaClient({ adapter });
 
@@ -19,6 +20,19 @@ async function main() {
       name: "관리자",
       role: "admin",
       passwordHash: adminPassword,
+    },
+  });
+
+  // 일반 회원 테스트 계정 (README 안내용)
+  const testPassword = await bcrypt.hash("test1234", 10);
+  await prisma.user.upsert({
+    where: { email: "test2@gunsan.test" },
+    update: { passwordHash: testPassword, name: "테스트회원" },
+    create: {
+      email: "test2@gunsan.test",
+      name: "테스트회원",
+      role: "user",
+      passwordHash: testPassword,
     },
   });
 
